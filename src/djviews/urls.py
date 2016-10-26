@@ -17,9 +17,10 @@ from django.conf.urls import url
 from django.contrib import admin
 
 
-from .views import home
+from .views import home, redirect_somewhere
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', home, name='home')
+    url(r'^$', home, name='home'),
+    url(r'^redirect/$', redirect_somewhere, name='home')
 ]
