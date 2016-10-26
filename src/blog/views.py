@@ -23,6 +23,13 @@ def post_model_list_view(request):
     print(qs)
     #return HttpResponse("some data")
     template = "blog/list-view.html"
-    context = {}
+    context = {
+        "object_list": qs,
+        #"some_dict": {"abc": 123},
+        #"num": 123,
+        #"array_list": [123, 423],
+        #"boolean_value": True,
+
+    }
     return render(request, template, context)
 
