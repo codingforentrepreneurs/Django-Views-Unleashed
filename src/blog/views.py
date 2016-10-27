@@ -8,19 +8,6 @@ from django.shortcuts import render, get_object_or_404
 from .forms import PostModelForm
 from .models import PostModel
 
-# CRUD 
-
-# Create
-
-# Retrieve
-
-# Update
-
-# Delete
-
-# List
-
-
 #@login_required
 def post_model_create_view(request):
     form = PostModelForm(request.POST or None)
@@ -107,4 +94,48 @@ def login_required_view(request):
         return HttpResponseRedirect("/login")
     
     return render(request, template, context)
+
+
+
+
+def post_model_robust_view(request, id=None):
+    obj = None
+    context =  {}
+    success_message = 'A new post was created'
+    
+    if id is None:
+        "obj is could be created"
+        template = "blog/create-view.html"
+    else:
+        "obj prob exists"
+        obj = get_object_or_404(PostModel, id=id)
+        success_message = 'A new post was created'
+        context["object"] = obj
+        template = "blog/detail-view.html"
+        if "edit" in request.get_full_path():
+            template = "blog/update-view.html"
+        if "delete" in request.get_full_path():
+            template = "blog/delete-view.html"
+            if request.method == "POST":
+                obj.delete()
+                messages.success(request, "Post deleted")
+                return HttpResponseRedirect("/blog/")
+
+    #if "edit" in request.get_full_path() or "create" in request.get_full_path():
+    form = PostModelForm(request.POST or None, instance=obj)
+    context["form"] = form
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        messages.success(request, success_message)
+        if obj is not None:
+            return HttpResponseRedirect("/blog/{num}".format(obj.id))
+        context["form"] - PostModelForm()
+    return render(request, template, context)
+
+
+
+
+
+
 
