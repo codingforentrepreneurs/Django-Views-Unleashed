@@ -3,7 +3,10 @@
 
 {% for object in object_list %}
 <li>
-      {{ object.slug }} {{ object.id }} {{ object.title }}
+    <a href='/blog/{{ object.id }}'>{{ object.title }}</a>
+   <!--  <a href='{% url "blog:detail" id=object.id %}'>{{ object.title }}</a>
+    <a href='{{ object.get_absolute_url }}'>{{ object.title }}</a> -->
+
 </li>
 {% endfor %}
 
