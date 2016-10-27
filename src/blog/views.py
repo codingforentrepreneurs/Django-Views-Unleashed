@@ -58,25 +58,26 @@ def post_model_update_view(request, id=None):
     return render(request, template, context)
 
 
-
 def post_model_detail_view(request, id=None):
-    #print(id)
-    # try:
-    #     obj = PostModel.objects.get(id=100)
-    # except:
-    #     raise Http404
-    # qs = PostModel.objects.filter(id=100)
-    # obj = None
-    # if not qs.exists() and qs.count() !=1:
-    #     raise Http404
-    # else:
-    #     obj = qs.first()
-
     obj = get_object_or_404(PostModel, id=id)
     context = {
         "object": obj,
     }
     template = "blog/detail-view.html"
+    return render(request, template, context)
+
+
+
+def post_model_delete_view(request, id=None):
+    obj = get_object_or_404(PostModel, id=id)
+    if request.method == "POST":
+        obj.delete()
+        messages.success(request, "Post deleted")
+        return HttpResponseRedirect("/blog/")
+    context = {
+        "object": obj,
+    }
+    template = "blog/delete-view.html"
     return render(request, template, context)
 
 
