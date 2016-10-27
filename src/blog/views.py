@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -20,16 +21,28 @@ from .models import PostModel
 
 def post_model_list_view(request):
     qs = PostModel.objects.all()
-    print(qs)
-    #return HttpResponse("some data")
-    template = "blog/list-view.html"
     context = {
         "object_list": qs,
-        #"some_dict": {"abc": 123},
-        #"num": 123,
-        #"array_list": [123, 423],
-        #"boolean_value": True,
-
     }
+    template = "blog/list-view.html"
+    return render(request, template, context)
+
+
+
+@login_required(login_url='/login/')
+def login_required_view(request):
+    print(request.user)
+    qs = PostModel.objects.all()
+    context = {
+        "object_list": qs,
+    }
+
+    if request.user.is_authenticated():
+        template = "blog/list-view.html"
+    else:
+        template = "blog/list-view-public.html"
+        #raise Http404
+        return HttpResponseRedirect("/login")
+    
     return render(request, template, context)
 
